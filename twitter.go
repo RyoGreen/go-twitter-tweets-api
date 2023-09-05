@@ -21,13 +21,14 @@ func NewClient(consumerKey, consumerSecret, accessToken, accessTokenSecret strin
 }
 
 type Data struct {
-	Id                 string `json:"data"`
+	Id                 string `json:"id"`
 	Text               string `json:"text"`
 	RemainingRateLimit int
 }
 
 type Response struct {
-	Data Data `json:"data"`
+	Data   Data   `json:"data"`
+	Detail string `json:"detail"`
 }
 
 var errApiRateLimit = errors.New("error: twitter rate limit exceeded")
@@ -56,6 +57,9 @@ func (c *Client) Tweet(text string) (*Data, error) {
 	var respData Response
 	if err := json.NewDecoder(res.Body).Decode(&respData); err != nil {
 		return nil, err
+	}
+	if respData.Detail != "" {
+		return nil, errors.New(respData.Detail)
 	}
 	remainingRateLimit, err := strconv.Atoi(res.Header.Get("X-App-Limit-24hour-Remaining"))
 	if err != nil {
