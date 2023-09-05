@@ -31,7 +31,7 @@ type Response struct {
 	Detail string `json:"detail"`
 }
 
-var errApiRateLimit = errors.New("error: twitter rate limit exceeded")
+var errApiRateLimit = errors.New("error: tweets api rate limit exceeded")
 
 func (c *Client) Tweet(text string) (*Data, error) {
 	options := struct {
@@ -65,7 +65,7 @@ func (c *Client) Tweet(text string) (*Data, error) {
 	if err != nil {
 		return nil, err
 	}
-	if remainingRateLimit == 0 {
+	if remainingRateLimit <= 0 {
 		return nil, errApiRateLimit
 	}
 	respData.Data.RemainingRateLimit = remainingRateLimit
