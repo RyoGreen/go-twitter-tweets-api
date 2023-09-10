@@ -7,27 +7,37 @@ import (
 	gotweets "github.com/RyoGreen/gotweet"
 )
 
+var c *gotweets.Client
+
+func init() {
+	c = gotweets.NewClient(os.Getenv("consumer_key"), os.Getenv("consumer_secret"), os.Getenv("access_token"), os.Getenv("access_token_secret"))
+}
+
 func TestTweets(t *testing.T) {
-	c := gotweets.NewClient(os.Getenv("consumer_key"), os.Getenv("consumer_secret"), os.Getenv("access_token"), os.Getenv("access_token_secret"))
 	tests := []struct {
-		text         string
+		name         string
 		expectedText string
+		option       *gotweets.Options
 	}{
 		{
-			text:         "test data",
+			name:         "",
 			expectedText: "test data",
+			option:       &gotweets.Options{},
 		},
 	}
-
-	for _, v := range tests {
-		respData, err := c.Tweet(v.text)
+	for _, test := range tests {
+		resp, err := c.Tweet(test.option)
 		if err != nil {
-			t.Error(err)
-			return
+
 		}
-		if respData.Text != v.expectedText {
-			t.Errorf("Test failed. text: %v, Expected resutlt : %v, Actucal result %v", v.text, v.expectedText, respData.Text)
-			return
+		if resp.Id == "" {
+			t.Error(err)
+		}
+		if resp.RemainingRateLimit == 0 {
+			t.Error(err)
+		}
+		if resp.Text != test.expectedText {
+			t.Error(err)
 		}
 	}
 }
