@@ -4,7 +4,6 @@ import (
 	"fmt"
 	"os"
 	"testing"
-	"time"
 
 	gotweets "github.com/RyoGreen/gotweet"
 )
@@ -220,11 +219,27 @@ func TestTweets(t *testing.T) {
 			expectedText:  "",
 			expectedError: fmt.Errorf("error: Media and Quote Tweet ID, Poll are mutually exclusive"),
 		},
+		{
+			name: "success tweet mention users",
+			option: &gotweets.Options{
+				Text:          "test tweet mention users",
+				ReplySettings: gotweets.MentionedUsers,
+			},
+			expectedText:  "test tweet mention users",
+			expectedError: nil,
+		},
+		{
+			name: "success tweet mention following",
+			option: &gotweets.Options{
+				Text:          "test tweet mention following",
+				ReplySettings: gotweets.MentionedFollowing,
+			},
+			expectedText:  "test tweet mention following",
+			expectedError: nil,
+		},
 	}
 	for _, test := range tests {
 		resp, err := c.Tweet(test.option)
-		time.Sleep(time.Second * 1)
-		fmt.Println(test.name)
 		if err != nil {
 			if err.Error() == test.expectedError.Error() {
 				fmt.Println("Test passed")
