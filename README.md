@@ -1,4 +1,5 @@
-# go-twitter-tweets-api :  Twitter Tweeting Library for Go
+# go-twitter-tweets-api
+Twitter Tweeting Library for Go
 
 ## Instalation:
 ```
