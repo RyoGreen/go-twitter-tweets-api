@@ -90,7 +90,6 @@ func (c *Client) Tweet(o *Options) (*Data, error) {
 	if o.Reply != nil && o.Reply.InReplyToTweetId == "" {
 		return nil, fmt.Errorf(errOptionStr, "Reply")
 	}
-
 	if (o.Media != nil && (o.Poll != nil || o.Reply != nil)) || (o.Poll != nil && (o.Media != nil || o.Reply != nil)) {
 		return nil, errors.New("error: Media and Quote Tweet ID, Poll are mutually exclusive")
 	}
